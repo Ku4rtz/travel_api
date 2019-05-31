@@ -3,7 +3,6 @@ const db = {}
 const sequelize = new Sequelize('travel_memories', 'root', '', {
     host: 'localhost',
     dialect: 'mysql',
-    operatorsAliases: false,
     port: 3306
 })
 
