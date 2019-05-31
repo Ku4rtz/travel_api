@@ -3,6 +3,7 @@ var router = express.Router()
 const User = require('../models/User')
 var jwt = require('jsonwebtoken')
 var config = require('../config')
+var bcrypt = require('bcrypt')
 
 var secretWord = config.secretWord;
 
@@ -27,24 +28,26 @@ router.post('/auth', function(req, res, next){
                 });
             }
             else if(user){
-                if(user.password != req.body.password){
-                    res.json({ success: false, message: 'Mot de passe incorrect'})
-                }
-                else{
-                    const payload = {
-                        admin: user.admin,
-                        id: user.id
-                    };
-                    var token = jwt.sign(payload, secretWord, {
-                        expiresIn : '24h'
-                    });
-    
-                    res.json({
-                        success: true,
-                        message: 'Enjoy your token',
-                        token: token
-                    });
-                }
+                bcrypt.compare(req.body.password, user.password, function(err, result){
+                    if(result == true){
+                        const payload = {
+                            admin: user.admin,
+                            id: user.id
+                        };
+                        var token = jwt.sign(payload, secretWord, {
+                            expiresIn : '24h'
+                        });
+        
+                        res.json({
+                            success: true,
+                            message: 'Enjoy your token',
+                            token: token
+                        });
+                    }
+                    else{
+                        res.json({ success: false, message: 'Mot de passe incorrect'})
+                    }
+                })
             }
         })
         .catch(err => {
