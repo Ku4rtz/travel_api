@@ -15,6 +15,12 @@ module.exports = db.sequelize.define(
         firstName: {
             type: Sequelize.STRING
         },
+        password: {
+            type: Sequelize.STRING
+        },
+        admin: {
+            type: Sequelize.TINYINT
+        }
     },
     {
         freezeTableName: true,
