@@ -6,8 +6,6 @@ var config = require('../config')
 
 var secretWord = config.secretWord;
 
-console.log(secretWord);
-
 router.post('/auth', function(req, res, next){
     if(!req.body.name || !req.body.password)
     {

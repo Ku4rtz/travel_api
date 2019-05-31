@@ -1,7 +1,7 @@
-var express = require('./node_modules/express')
+var express = require('express')
 var router = express.Router()
-var jwt = require('./node_modules/jsonwebtoken')
-var config = require('../config')
+var jwt = require('jsonwebtoken')
+var config = require('../../config')
 
 var secretWord = config.secretWord;
 
