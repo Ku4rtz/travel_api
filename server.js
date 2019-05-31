@@ -9,6 +9,8 @@ app.use(bodyParser.urlencoded({
 
 var country = require('./routes/country');
 var user = require('./routes/user');
+var auth = require('./routes/auth');
+var middleware = require('./routes/middleware');
 
 // prevent CORS problems
 app.use(function (req, res, next) {
@@ -18,6 +20,9 @@ app.use(function (req, res, next) {
     next();
 })
 
+app.use('/', auth);
+
+app.use('/', middleware);
 app.use('/', country);
 app.use('/', user);
  
