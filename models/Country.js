@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize')
 const db = require('../database/db.js')
+const User = require('./User')
 
-module.exports = db.sequelize.define(
-    'country',
+const Country = db.sequelize.define('country', 
     {
         id: {
             type: Sequelize.INTEGER,
@@ -28,5 +28,13 @@ module.exports = db.sequelize.define(
     {
         freezeTableName: true,
         timestamps: false
-    },
-)
+    });
+    Country.associate = () => {
+      Country.belongsToMany(User, {
+        through: 'Country_user',
+        as: 'user',
+        foreignKey: 'id_country'
+      });
+    };
+
+module.exports = Country;

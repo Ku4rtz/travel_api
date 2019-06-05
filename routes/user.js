@@ -5,6 +5,7 @@ var bcrypt = require('bcrypt')
 
 const saltRounds = 10;
 
+//Create user
 router.post('/user', function(req, res, next){
     if(!req.body.name){
         res.json({

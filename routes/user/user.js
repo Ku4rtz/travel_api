@@ -65,4 +65,6 @@ router.put('/user/:id', function(req, res, next){
     }
 })
 
+router.get('/users')
+
 module.exports = router

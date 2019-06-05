@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+var helmet = require('helmet')
  
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -30,6 +31,8 @@ app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT ,DELETE');
     next();
 })
+
+app.use(helmet());
 
 // All access
 app.use('/', auth);

@@ -2,7 +2,7 @@
   "name": "apii",
   "version": "1.0.0",
   "description": "testing epress api",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,7 +16,9 @@
     "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "cookies": "^0.7.3",
     "express": "^4.16.4",
+    "helmet": "^3.18.0",
     "install": "^0.12.2",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.16.0",
@@ -24,6 +26,6 @@
     "sequelize": "^5.8.6"
   },
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "nodemon": "^1.19.1"
   }
 }

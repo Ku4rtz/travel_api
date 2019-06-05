@@ -4,6 +4,7 @@ const User = require('../models/User')
 var jwt = require('jsonwebtoken')
 var config = require('../config')
 var bcrypt = require('bcrypt')
+var Cookies = require('cookies')
 
 var secretWord = config.secretWord;
 
@@ -32,20 +33,23 @@ router.post('/auth', function(req, res, next){
                     if(result == true){
                         const payload = {
                             admin: user.admin,
-                            id: user.id
+                            id: user.id,
+                            xsrfToken: Math.random().toString(36).slice(-15)
                         };
                         var token = jwt.sign(payload, secretWord, {
                             expiresIn : '24h'
                         });
+
+                        res.cookie('access_token', 'token')
         
                         res.json({
                             success: true,
-                            message: 'Enjoy your token',
-                            token: token
+                            message: 'Token provided',
+                            xsrfToken: payload.xsrfToken
                         });
                     }
                     else{
-                        res.json({ success: false, message: 'Mot de passe incorrect'})
+                        res.json({ success: false, message: 'Mot de passe incorrect.'})
                     }
                 })
             }
