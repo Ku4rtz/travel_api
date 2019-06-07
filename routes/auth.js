@@ -2,11 +2,12 @@ var express = require('express')
 var router = express.Router()
 const User = require('../models/User')
 var jwt = require('jsonwebtoken')
-var config = require('../config')
+var Config = require('../Config')
 var bcrypt = require('bcrypt')
 var Cookies = require('cookies')
 
-var secretWord = config.secretWord;
+var secretWord = Config.secretWord;
+var keys = [Config.cookiesKey];
 
 router.post('/auth', function(req, res, next){
     if(!req.body.name || !req.body.password)
@@ -40,12 +41,16 @@ router.post('/auth', function(req, res, next){
                             expiresIn : '24h'
                         });
 
-                        res.cookie('access_token', 'token')
+                        var cookies = new Cookies(req, res, { keys: keys})
+
+                        cookies.set('access_token', token, { signed: true })
+
+                        console.log(cookies.get('access_token', { signed: true }))
         
                         res.json({
                             success: true,
                             message: 'Token provided',
-                            xsrfToken: payload.xsrfToken
+                            xsrfToken: payload.xsrfToken,
                         });
                     }
                     else{

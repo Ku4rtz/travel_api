@@ -1,5 +1,6 @@
-config = {
-    'secretWord': 'tm#lmj@2019^isitech'
+var Config = {
+    secretWord: 'tm#lmj@2019^isitech',
+    cookiesKey: 'amdnazj&dk#124h#kj'
 }
 
-module.exports = config
+module.exports = Config
