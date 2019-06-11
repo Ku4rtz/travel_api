@@ -15,7 +15,16 @@ const User = db.sequelize.define('user',
     firstName: {
         type: Sequelize.STRING
     },
+    email: {
+        type: Sequelize.STRING
+    },
     password: {
+        type: Sequelize.STRING
+    },
+    birthDate: {
+        type: Sequelize.DATE
+    },
+    sex: {
         type: Sequelize.STRING
     },
     admin: {
