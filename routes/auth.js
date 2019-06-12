@@ -4,10 +4,9 @@ const User = require('../models/User')
 var jwt = require('jsonwebtoken')
 var Config = require('../models/Config')
 var bcrypt = require('bcrypt')
-var Cookies = require('cookies')
+
 
 var secretWord = Config.secretWord;
-var keys = [Config.cookiesKey];
 
 router.get('/deleted', function(req, res, next){
     res.clearCookie("user_token")
@@ -32,7 +31,7 @@ router.post('/auth', function(req, res, next){
     else{
         User.findOne({
             where: {
-                name: req.body.name
+               email: req.body.name
             }  
         })
         .then(user => {

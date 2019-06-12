@@ -29,26 +29,36 @@ router.post('/user', function(req, res, next){
                 bcrypt.hash(req.body.password, saltRounds, function(err, hash){
                     req.body.password = hash;
                     var date = new Date(req.body.birthYear + '-' + req.body.birthMonth + '-' + req.body.birthDay);
-                    User.create({
-                        name: req.body.name,
-                        firstName: req.body.firstName,
-                        email: req.body.email,
-                        password: req.body.password,
-                        birthDate: date,
-                        sex: req.body.sex,
-                        admin: 0
-                    })
-                    .then(data => {
-                        res.send(data)
-                    })
-                    .catch(err => {
-                        res.json('error :' + err)
+                    User.findOne({
+                        where: { email: req.body.email}
+                    }).then(user => {
+                        if(!user){
+                            User.create({
+                                name: req.body.name,
+                                firstName: req.body.firstName,
+                                email: req.body.email,
+                                password: req.body.password,
+                                birthDate: date,
+                                sex: req.body.sex,
+                                admin: 0
+                            })
+                            .then(data => {
+                                return res.json({ success: true })
+                            })
+                            .catch(err => {
+                                res.json('error :' + err)
+                            })
+                        }
+                        else
+                        {
+                            return res.json({ success: false, message: 'Cette adresse e-mail existe déjà.' })
+                        }
                     })
                 })
             }
             else
             {
-                return res.json({ success: false, message: 'Erreur de captcha.'})
+                return res.json({ success: false, message: 'Erreur de captcha. Ce dernier a déjà été utilisé. Rechargez la page.'})
             }
         })
     }
