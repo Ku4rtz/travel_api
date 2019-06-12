@@ -1,8 +1,8 @@
 var express = require('express')
 var router = express.Router()
-const User = require('../models/User')
+const User = require('../models/Config')
 var jwt = require('jsonwebtoken')
-var Config = require('../Config')
+var Config = require('../models/Config')
 var bcrypt = require('bcrypt')
 var Cookies = require('cookies')
 

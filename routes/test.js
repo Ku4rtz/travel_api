@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var Cookies = require('cookies')
-var Config = require('../Config')
+var Config = require('../models/Config')
 
 var keys = [Config.cookiesKey]
 
