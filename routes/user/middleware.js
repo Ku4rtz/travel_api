@@ -6,8 +6,8 @@ var config = require('../../models/Config')
 var secretWord = config.secretWord;
 
 router.use(function(req, res, next){
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    var xsrfToken = req.body.xsrfToken;
+    var token = req.signedCookies.user_token;
+    var xsrfToken = req.headers.authorization;
 
     if(token){
         jwt.verify(token, secretWord, function(err, decoded){

@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-const User = require('../models/Config')
+const User = require('../models/User')
 var jwt = require('jsonwebtoken')
 var Config = require('../models/Config')
 var bcrypt = require('bcrypt')
@@ -8,6 +8,19 @@ var Cookies = require('cookies')
 
 var secretWord = Config.secretWord;
 var keys = [Config.cookiesKey];
+
+router.get('/deleted', function(req, res, next){
+    res.clearCookie("user_token")
+    res.send({message: 'cookie deleted'})
+})
+
+router.get('/auth', function(req, res, next){
+    var token = req.signedCookies.user_token
+
+    jwt.verify(token, secretWord, function(err, decoded){
+        res.json({admin: decoded.admin})
+    })
+})
 
 router.post('/auth', function(req, res, next){
     if(!req.body.name || !req.body.password)
@@ -41,17 +54,13 @@ router.post('/auth', function(req, res, next){
                             expiresIn : '24h'
                         });
 
-                        var cookies = new Cookies(req, res, { keys: keys})
-
-                        cookies.set('access_token', token, { signed: true })
-
-                        console.log(cookies.get('access_token', { signed: true }))
+                        res.cookie('user_token', token, { signed: true, httpOnly: true });
         
                         res.json({
                             success: true,
                             message: 'Token provided',
                             xsrfToken: payload.xsrfToken,
-                        });
+                        })
                     }
                     else{
                         res.json({ success: false, message: 'Mot de passe incorrect.'})

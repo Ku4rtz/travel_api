@@ -3,16 +3,21 @@ const app = express();
 const bodyParser = require('body-parser');
 var helmet = require('helmet');
 var cors = require('cors');
+var cookieParser = require('cookie-parser');
+var config = require('./models/Config')
  
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use(cookieParser(config.cookiesKey));
+
 // routes allowed for everyone
 var auth = require('./routes/auth');
 var user = require('./routes/user');
-var test = require('./routes/test')
+var test = require('./routes/test');
+
 
 // routes allowed for standard user
 var countryUser = require('./routes/user/country');
@@ -44,13 +49,15 @@ app.use('/', auth);
 app.use('/', user);
 app.use('/', test);
 
+app.use('/', middlewareUser) // Middleware for users
+
 // Only standard user
-app.use('/', middlewareUser);
 app.use('/', countryUser);
 app.use('/', userUser);
 
+app.use('/', middlewareAdmin) // Middleware for admins
+
 // Only admins
-app.use('/', middlewareAdmin);
 app.use('/', countryAdmin);
 app.use('/', userAdmin);
 

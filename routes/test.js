@@ -3,22 +3,14 @@ var router = express.Router()
 var Cookies = require('cookies')
 var Config = require('../models/Config')
 
-var keys = [Config.cookiesKey]
-
-router.get('/test', function(req, res, next){
-    var cookies = new Cookies(req, res, { keys: keys})
-
-    cookies.set('LastVisit', 'Bonjour', { signed: true })
-    res.json({
-        success: true,
-    });
+router.get('/setuser', function(req, res, next){
+    //res.cookie("userData", "petittest");
+    res.send('user data added to cookie');
 })
 
-router.post('/test', function(req, res, next){
-    var cookies = new Cookies(req, res, { keys: keys})
-    res.json({
-        cookie: cookies.get('access_token', { signed: true })
-    })
+router.get('/getuser', function(req, res, next){
+    //res.send(req.cookies);
+    res.send('hello')
 })
 
 module.exports = router

@@ -6,7 +6,7 @@ var config = require('../../models/Config')
 var secretWord = config.secretWord;
 
 router.use(function(req, res, next){
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    var token = req.signedCookies.user_token;
 
     if(token){
         jwt.verify(token, secretWord, function(err, decoded){
@@ -25,7 +25,8 @@ router.use(function(req, res, next){
     else{
         return res.status(403).send({
             success: false,
-            message: 'No token provided.'
+            message: 'No token provided.',
+            token: token
         });
     }
 });
