@@ -22,7 +22,7 @@ router.get('/auth', function(req, res, next){
 })
 
 router.post('/auth', function(req, res, next){
-    if(!req.body.name || !req.body.password)
+    if(!req.body.login || !req.body.password)
     {
         res.json({
             error: 'Bad data'
@@ -31,8 +31,8 @@ router.post('/auth', function(req, res, next){
     else{
         User.findOne({
             where: {
-               email: req.body.name
-            }  
+               email: req.body.login
+            }
         })
         .then(user => {
             if(!user){

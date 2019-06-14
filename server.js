@@ -16,8 +16,8 @@ app.use(cookieParser(config.cookiesKey));
 // routes allowed for everyone
 var auth = require('./routes/auth');
 var user = require('./routes/user');
+var checktoken = require('./routes/checktoken');
 var test = require('./routes/test');
-
 
 // routes allowed for standard user
 var countryUser = require('./routes/user/country');
@@ -47,6 +47,7 @@ app.use(helmet());
 // All access
 app.use('/', auth);
 app.use('/', user);
+app.use('/', checktoken);
 app.use('/', test);
 
 app.use('/', middlewareUser) // Middleware for users

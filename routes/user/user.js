@@ -21,6 +21,22 @@ router.get('/user/:id', function(req, res, next){
       })
 })
 
+router.get('/thisuser', function(req, res, next){
+    User.findOne({
+        where: {
+            id: req.decoded.id
+        }
+    })
+    .then(user => {
+        if(user){
+            res.json(user)
+        }
+        else{
+            res.send('User does not exist')
+        }
+    })
+})
+
 router.delete('/user/:id', function(req, res, next){
     if(req.params.id == decoded.id){
         User.destroy({
