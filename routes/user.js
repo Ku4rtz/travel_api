@@ -44,15 +44,18 @@ router.post('/user', function(req, res, next){
                 user.save(function(err){
                     if(err){
                         if(err.code === 11000){
-                            return res.status(422).send({
+                            res.status(422).send({
                                 success: false,
                                 message: 'Cette adresse e-mail existe déjà.'
                             })
                         }
-                        res.status(400).send({
-                            success: false,
-                            message: 'Une erreur s\'est produite, veuillez réessayer plus tard.'
-                        })
+                        else
+                        {
+                            res.status(400).send({
+                                success: false,
+                                message: 'Une erreur s\'est produite, veuillez réessayer plus tard.'
+                            })
+                        }
                     }
                     else
                     {
@@ -66,7 +69,7 @@ router.post('/user', function(req, res, next){
         }
         else
         {
-            return res.json({ success: false, message: 'Erreur de captcha. Ce dernier a déjà été utilisé. Rechargez la page.'})
+            res.json({ success: false, message: 'Erreur de captcha. Ce dernier a déjà été utilisé. Rechargez la page.'})
         }
     })
 })
