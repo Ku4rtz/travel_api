@@ -5,71 +5,61 @@ var jwt = require('jsonwebtoken')
 var Config = require('../models/Config')
 var bcrypt = require('bcrypt')
 
-
 var secretWord = Config.secretWord;
-
-router.get('/deleted', function(req, res, next){
-    res.clearCookie("user_token")
-    res.send({message: 'cookie deleted'})
-})
-
-router.get('/auth', function(req, res, next){
-    var token = req.signedCookies.user_token
-
-    jwt.verify(token, secretWord, function(err, decoded){
-        res.json({admin: decoded.admin})
-    })
-})
 
 router.post('/auth', function(req, res, next){
     if(!req.body.login || !req.body.password)
     {
-        res.json({
-            error: 'Bad data'
+        res.status(400).json({
+            success: false,
+            message: 'Bad data'
         })
     }
     else{
-        User.findOne({
-            where: {
-               email: req.body.login
-            }
-        })
-        .then(user => {
-            if(!user){
-                res.json({
-                    success: false,
-                    message: 'Nom d\'utilisateur incorrect.'
-                });
-            }
-            else if(user){
-                bcrypt.compare(req.body.password, user.password, function(err, result){
-                    if(result == true){
-                        const payload = {
-                            admin: user.admin,
-                            id: user.id,
-                            xsrfToken: Math.random().toString(36).slice(-15)
-                        };
-                        var token = jwt.sign(payload, secretWord, {
-                            expiresIn : '24h'
-                        });
+        User.findOne({ email: req.body.login })
+            .then(user => {
+                if(!user){
+                    res.json({
+                        succes: false,
+                        message: 'Nom d\'utilisateur incorrect.'
+                    });
+                }
+                else{
+                    console.log(user);
+                    bcrypt.compare(req.body.password, user.password, function(err, result){
+                        if(result){
+                            const payload = {
+                                admin: user.admin,
+                                id: user._id,
+                                xsrfToken: Math.random().toString(36).slice(-15)
+                            };
+                            var token = jwt.sign(payload, secretWord, {
+                                expiresIn: '24h'
+                            });
 
-                        res.cookie('user_token', token, { signed: true, httpOnly: true });
-        
-                        res.json({
-                            success: true,
-                            message: 'Token provided',
-                            xsrfToken: payload.xsrfToken,
-                        })
-                    }
-                    else{
-                        res.json({ success: false, message: 'Mot de passe incorrect.'})
-                    }
+                            res.cookie('user_token', token, { signed: true, httpOnly: true });
+
+                            res.json({
+                                success: true,
+                                message: 'Token provided',
+                                xsrfToken: payload.xsrfToken
+                            })
+                        }
+                        else{
+                            res.json({
+                                success: false,
+                                message: 'Mot de passe incorrect.',
+                            })
+                        }
+                    })
+                }
+            })
+            .catch(err => {
+                res.status(400).send({
+                    success: false,
+                    message: 'Une erreur s\'est produite, réessayez plus tard.' + err
                 })
-            }
-        })
-        .catch(err => {
-            res.send('error: ' + err)
-        })
+            })
     }
 })
 

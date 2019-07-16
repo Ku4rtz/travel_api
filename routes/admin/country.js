@@ -4,36 +4,46 @@ const Country = require('../../models/Country')
 
 router.post('/country', function(req, res, next){
     if(!req.body.name_fr){
-        res.json({
-            error: 'Bad data'
+        res.status(400).send({
+            success: false,
+            message: 'Bad data'
         })
     }
     else{
-        Country.create(req.body)
-            .then(data => {
-                res.send(data)
-            })
-            .catch(err => {
-                res.json('error :' + err)
-            })
+        new Country(req.body).save(function(err){
+            if(err){
+                res.status(400).send({
+                    success: false,
+                    message: 'Add country failed: ' + err
+                })
+            }
+            else{
+                res.status(201).send({
+                    success: true,
+                    message: "Country added."
+                });
+            }
+        })
     }
 })
 
-router.delete('/country/:id', function(req, res, next){
-    Country.destroy({
-        where: {
-            id: req.params.id
-        }
-    })
-    .then(() => {
-        res.json({ status: 'Country Deleted !'})
-    })
-    .catch(err => {
-        res.send('error: ' + err)
-    })
+router.delete('/country/:alpha3', function(req, res, next){
+    Country.deleteOne({ alpha3: req.params.alpha3})
+        .then(() => {
+            res.json({
+                success: true,
+                message: 'Country Deleted !'
+            });
+        })
+        .catch(err => {
+            res.status(400).send({
+                success: false,
+                message: 'Error: ' + err
+            })
+        })
 })
 
-router.put('/country/:id', function(req, res, next){
+router.put('/country/:alpha3', function(req, res, next){
     if(!req.body.name_fr){
         res.json({
             error: 'Bad data'
@@ -45,12 +55,18 @@ router.put('/country/:id', function(req, res, next){
         })
     }
     else{
-        Country.update(req.body, {where : { id: req.params.id }})
+        Country.updateOne({ alpha3: req.params.alpha3 }, {$set: req.body}, {upsert: true})
             .then(() => {
-                res.json({ status: 'Country updated !'})
+                res.json({
+                    success: true,
+                    message: 'Country Updated !'
+                });
             })
             .catch(err => {
-                res.send('error ' + err)
+                res.status(400).send({
+                    success: false,
+                    message: 'Error: ' + err
+                })
             })
     }
 })

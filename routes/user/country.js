@@ -12,6 +12,10 @@ router.get('/country', function(req, res, next){
         })
 })
 
+router.get('/userCountry', function(req, res, next){
+    User
+})
+
 router.get('/country/:id', function(req, res, next){
     Country.findOne({
         where: {

@@ -1,35 +1,41 @@
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
-var helmet = require('helmet');
-var cors = require('cors');
-var cookieParser = require('cookie-parser');
-var config = require('./models/Config')
+let helmet = require('helmet');
+let bodyParser = require('body-parser');
+let cors = require('cors');
+let cookieParser = require('cookie-parser');
+let config = require('./models/Config');
+let mongoose = require('mongoose');
  
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+mongoose.connect('mongodb+srv://CHARLAT:184628Stebest@cluster0-rbzrl.mongodb.net/travel_memories?retryWrites=true&w=majority')
+    .then(() => console.log('Now connected to MongoDB!'))
+    .catch(err => console.error(err));
+
 app.use(cookieParser(config.cookiesKey));
 
 // routes allowed for everyone
-var auth = require('./routes/auth');
-var user = require('./routes/user');
-var checktoken = require('./routes/checktoken');
-var test = require('./routes/test');
+let auth = require('./routes/auth');
+let user = require('./routes/user');
+let checktoken = require('./routes/checktoken');
+let test = require('./routes/test');
 
 // routes allowed for standard user
-var countryUser = require('./routes/user/country');
-var userUser = require('./routes/user/user');
+//var countryUser = require('./routes/user/country');
+//var userUser = require('./routes/user/user');
+//var userCountry = require('./routes/user/user_country');
 
 // routes allowed for admins
-var countryAdmin = require('./routes/admin/country');
-var userAdmin = require('./routes/admin/user');
+let countryAdmin = require('./routes/admin/country');
+let userAdmin = require('./routes/admin/user');
 
 // middlewares to manage access to different routes
-var middlewareAdmin = require('./routes/admin/middleware');
-var middlewareUser = require('./routes/user/middleware');
+//var middlewareAdmin = require('./routes/admin/middleware');
+//var middlewareUser = require('./routes/user/middleware');
 
 app.use(cors({credentials: true, origin: true}))
 
@@ -50,13 +56,14 @@ app.use('/', user);
 app.use('/', checktoken);
 app.use('/', test);
 
-app.use('/', middlewareUser) // Middleware for users
+/*app.use('/', middlewareUser) // Middleware for users*/
 
 // Only standard user
-app.use('/', countryUser);
-app.use('/', userUser);
+//app.use('/', countryUser);
+//app.use('/', userUser);
+//app.use('/', userCountry);
 
-app.use('/', middlewareAdmin) // Middleware for admins
+/*app.use('/', middlewareAdmin); // Middleware for admins*/
 
 // Only admins
 app.use('/', countryAdmin);

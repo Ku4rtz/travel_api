@@ -1,17 +1,20 @@
 var express = require('express')
 var router = express.Router()
 const User = require('../../models/User')
-const Country = require('../../models/Country')
 
-router.get('/user', function(req, res, next){
-    User.findAll({
-    })
-        .then(user => {
-            res.json(user)
+router.get('/user', async function(req, res, next){
+    try{
+        const users = await User
+            .find()
+            .populate('countries')
+
+        res.json(users)
+    } catch(err){
+        res.status(400).send({
+            success: false,
+            message: 'Error: ' + err
         })
-        .catch(err => {
-            res.send('error: ' + err)
-        })
+    }
 })
 
 module.exports = router

@@ -1,46 +1,43 @@
-const Sequelize = require('sequelize')
-const db = require('../database/db.js')
-const Country = require('./Country')
+let mongoose = require('mongoose');
 
-const User = db.sequelize.define('user', 
-{
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    name: {
-        type: Sequelize.STRING
-    },
-    firstName: {
-        type: Sequelize.STRING
+const UserSchema = new mongoose.Schema({
+	name: {
+		type: String,
+		required: true
+	},
+	firstName: {
+        type: String,
+        required: true
     },
     email: {
-        type: Sequelize.STRING
+        type: String,
+        required: true,
+        unique: true
     },
     password: {
-        type: Sequelize.STRING
+        type: String,
+        required: true
     },
     birthDate: {
-        type: Sequelize.DATE
+        type: Date,
+        required: true
     },
     sex: {
-        type: Sequelize.STRING
+        type: String,
+        required: true
     },
+    countries: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Country'
+        }
+    ],
     admin: {
-        type: Sequelize.TINYINT
+        type: Number,
+        required: true
     }
-},
-{
-    freezeTableName: true,
-    timestamps: false,       
 });
-User.associate = () => {
-    User.belongsToMany(Country, {
-        through: 'Country_user',
-        as: 'country',
-        foreignKey: 'id_user'
-    });
-};
 
-module.exports = User
+let UserModel = mongoose.model('User', UserSchema);
+
+module.exports = UserModel;
