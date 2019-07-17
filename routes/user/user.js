@@ -3,84 +3,121 @@ var router = express.Router()
 const User = require('../../models/User')
 
 router.get('/user/:id', function(req, res, next){
-    User.findOne({
-        where: {
-            id: req.params.id
-        }       
-    })
-      .then(user => {
-          if(user) {
-              res.json(user)
-          }
-          else {
-              res.send('User does not exist')
-          }
-      })
-      .catch(err => {
-          res.send('error: ' + err)
-      })
+    User.findById(req.params.id).populate('countries')
+        .then(user => {
+            if(user){
+                res.json(user);
+            }
+            else
+            {
+                res.json({
+                    success: false,
+                    result: false,
+                    message: "User does not exist"
+                })
+            }
+        })
+        .catch(err => {
+            res.status(400).send({
+                success: false,
+                message: "Error: " + err
+            })
+        })
 })
 
 router.get('/thisuser', function(req, res, next){
-    User.findOne({
-        where: {
-            id: req.decoded.id
-        }
-    })
-    .then(user => {
-        if(user){
-            res.json(user)
-        }
-        else{
-            res.send('User does not exist')
-        }
-    })
-})
-
-router.delete('/user/:id', function(req, res, next){
-    if(req.params.id == decoded.id){
-        User.destroy({
-            where: {
-                id: req.params.id
+    if(req.decoded.id){
+        User.findById(req.decoded.id).populate('countries')
+        .then(user => {
+            if(user){
+                res.json(user);
+            }
+            else
+            {
+                res.json({
+                    success: false,
+                    result: false,
+                    message: "User does not exist"
+                })
             }
         })
+        .catch(err => {
+            res.status(400).send({
+                success: false,
+                message: "Error: " + err
+            })
+        })
+    }
+    else
+    {
+        res.status(400).send({
+            success: false,
+            message: "Une erreur est survenue"
+        })
+    }
+})
+
+router.delete('/thisuser', function(req, res, next){
+    if(req.decoded.id){
+        User.findByIdAndDelete(req.decoded.id)
         .then(() => {
-            res.json({ status: 'User Deleted !'})
+            res.json({
+                success: true,
+                message: "User deleted"
+            })
         })
         .catch(err => {
-            res.send('error: ' + err)
+            res.status(400).send({
+                success: false,
+                message: "Error: " + err
+            })
         })
     }
-    else{
-        res.json({ success:'false', message: 'Une erreur est survenue.' })
-    }   
+    else
+    {
+        res.status(400).send({
+            success: false,
+            message: "Une erreur est survenue"
+        })
+    }
 })
 
-router.put('/user/:id', function(req, res, next){
+
+router.put('/thisuser', function(req, res, next){
     if(!req.body.name){
         res.json({
-            error: 'Bad data'
+            success: false,
+            message: 'Bad data'
         })
     }
-    else if(req.body.id){
+    else if(req.body.admin && req.decoded.admin == 0){
         res.json({
-            error: 'You can\'t update a unique primary key id'
+            succes: false,
+            message: 'Impossible to update field admin'
         })
     }
-    else if(req.params.id == decoded.id){
-        User.update(req.body, {where : { id: req.params.id }})
+    else if(req.decoded.id){
+        User.findByIdAndUpdate(req.decoded.id, req.body)
             .then(() => {
-                res.json({ status: 'User updated !'})
+                res.json({
+                    success: true,
+                    message: "User updated"
+                })
             })
             .catch(err => {
-                res.send('error ' + err)
+                res.status(400).send({
+                    success: false,
+                    message: "Error: " + err
+                })
             })
     }
-    else{
-        res.json({ success:'false', message: 'Une erreur est survenue.' })
+    else
+    {
+        res.status(400).send({
+            success: false,
+            message: "Une erreur est survenue"
+        })
     }
 })
-
-router.get('/users')
 
 module.exports = router

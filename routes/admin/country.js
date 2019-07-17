@@ -55,7 +55,7 @@ router.put('/country/:alpha3', function(req, res, next){
         })
     }
     else{
-        Country.updateOne({ alpha3: req.params.alpha3 }, {$set: req.body}, {upsert: true})
+        Country.updateOne({ alpha3: req.params.alpha3 }, {$set: req.body})
             .then(() => {
                 res.json({
                     success: true,

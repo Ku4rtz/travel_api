@@ -25,17 +25,16 @@ let checktoken = require('./routes/checktoken');
 let test = require('./routes/test');
 
 // routes allowed for standard user
-//var countryUser = require('./routes/user/country');
-//var userUser = require('./routes/user/user');
-//var userCountry = require('./routes/user/user_country');
+let countryUser = require('./routes/user/country');
+let userUser = require('./routes/user/user');
 
 // routes allowed for admins
 let countryAdmin = require('./routes/admin/country');
 let userAdmin = require('./routes/admin/user');
 
 // middlewares to manage access to different routes
-//var middlewareAdmin = require('./routes/admin/middleware');
-//var middlewareUser = require('./routes/user/middleware');
+let middlewareAdmin = require('./routes/admin/middleware');
+let middlewareUser = require('./routes/user/middleware');
 
 app.use(cors({credentials: true, origin: true}))
 
@@ -56,14 +55,13 @@ app.use('/', user);
 app.use('/', checktoken);
 app.use('/', test);
 
-/*app.use('/', middlewareUser) // Middleware for users*/
+app.use('/', middlewareUser) // Middleware for users
 
 // Only standard user
-//app.use('/', countryUser);
-//app.use('/', userUser);
-//app.use('/', userCountry);
+app.use('/', countryUser);
+app.use('/', userUser);
 
-/*app.use('/', middlewareAdmin); // Middleware for admins*/
+app.use('/', middlewareAdmin); // Middleware for admins
 
 // Only admins
 app.use('/', countryAdmin);

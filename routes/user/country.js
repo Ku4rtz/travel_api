@@ -3,35 +3,37 @@ var router = express.Router()
 const Country = require('../../models/Country')
 
 router.get('/country', function(req, res, next){
-    Country.findAll()
+    Country.find()
         .then(country => {
             res.json(country)
         })
         .catch(err => {
-            res.send('error: ' + err)
+            res.status(400).send({
+                success: false,
+                message: "Error: " + err
+            })
         })
 })
 
-router.get('/userCountry', function(req, res, next){
-    User
-})
-
-router.get('/country/:id', function(req, res, next){
-    Country.findOne({
-        where: {
-            id: req.params.id
-        }       
-    })
+router.get('/country/:alpha3', function(req, res, next){
+    Country.findOne({ alpha3: req.params.alpha3 })
       .then(country => {
           if(country) {
               res.json(country)
           }
           else {
-              res.send('Country does not exist')
+              res.json({
+                  success: false,
+                  result: false,
+                  message: "Country does not exist"
+              })
           }
       })
       .catch(err => {
-          res.send('error: ' + err)
+        res.status(400).send({
+            success: false,
+            message: "Error: " + err
+        })
       })
 })
 
