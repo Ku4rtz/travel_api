@@ -67,7 +67,7 @@ app.use('/', middlewareAdmin); // Middleware for admins
 app.use('/', countryAdmin);
 app.use('/', userAdmin);
 
-// port must be set to 8080 because incoming http requests are routed from port 80 to port 8080
+// Port is 3001
 app.listen(3001, function () {
     console.log('Node app is running on port 3001');
 });
