@@ -27,7 +27,7 @@ router.get('/user/:id', function(req, res, next){
 
 router.get('/thisuser', function(req, res, next){
     if(req.decoded.id){
-        User.findById(req.decoded.id).populate('countries')
+        User.findById(req.decoded.id).select({password: 0, _id: 0, admin:0}).populate('countries', {_id: 0})
         .then(user => {
             if(user){
                 res.json(user);
