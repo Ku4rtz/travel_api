@@ -27,6 +27,7 @@ let test = require('./routes/test');
 // routes allowed for standard user
 let countryUser = require('./routes/user/country');
 let userUser = require('./routes/user/user');
+let disconnect = require('./routes/user/disconnect');
 
 // routes allowed for admins
 let countryAdmin = require('./routes/admin/country');
@@ -60,6 +61,7 @@ app.use('/', middlewareUser) // Middleware for users
 // Only standard user
 app.use('/', countryUser);
 app.use('/', userUser);
+app.use('/', disconnect);
 
 app.use('/', middlewareAdmin); // Middleware for admins
 
