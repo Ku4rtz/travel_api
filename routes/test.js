@@ -1,13 +1,14 @@
 var express = require('express')
 var router = express.Router()
-const User = require('../models/User')
+const Country = require('../models/Country')
 
-router.post('/test', function(req, res, next){
-    User.findOne({ email: req.body.login })
-        .then(user => {
-            res.json(
-                user.password
-            )
+router.get('/test', function(req, res, next){
+    Country.find()
+        .then(countries => {
+            countries.forEach(function(country){
+                Country.update({_id: country._id}, { preposition_fr: 'OK' }, {upsert: true}, function(err){
+                })
+            })
         })
 })
 

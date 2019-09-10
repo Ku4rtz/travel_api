@@ -28,6 +28,7 @@ let test = require('./routes/test');
 let countryUser = require('./routes/user/country');
 let userUser = require('./routes/user/user');
 let disconnect = require('./routes/user/disconnect');
+let photos = require('./routes/user/photos');
 
 // routes allowed for admins
 let countryAdmin = require('./routes/admin/country');
@@ -55,6 +56,7 @@ app.use('/', auth);
 app.use('/', user);
 app.use('/', checktoken);
 app.use('/', test);
+app.use('/', photos);
 
 app.use('/', middlewareUser) // Middleware for users
 

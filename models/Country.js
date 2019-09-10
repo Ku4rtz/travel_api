@@ -21,7 +21,11 @@ const CountrySchema = new mongoose.Schema({
     name_fr: {
         type: String,
         required: true
-    }	
+    },
+    preposition_fr: {
+        type: String,
+        required: true
+    }
 });
 
 let CountryModel = mongoose.model('Country', CountrySchema);
