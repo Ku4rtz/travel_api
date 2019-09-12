@@ -1,20 +1,54 @@
 var express = require('express')
 var router = express.Router()
-const User = require('../../models/User')
+const Photo = require('../../models/Photo')
+const Country = require('../../models/Country')
+let mongoose = require('mongoose')
 
-router.get('/getPhotos', function(req, res, next){
-    User.findOneAndUpdate(
-        {
-            "name": "CHARLAT",
-            "countries": "5d2d847b06f2f94118a36518"
-        },
-        { $push : { "countries.photos" : {
-            base64: "bla"
-        } }}
-    )
-        .then(user => {
-            res.json({
-                user
+router.put('/addPhotos', function(req, res, next){
+    if(req.body.alpha3 && req.body.photos){
+        Country.findOne({ alpha3: req.body.alpha3 })
+        .then(country => {
+            console.log(req.body.photos)
+            req.body.photos.forEach(function(photo){
+                photoToAdd = new Photo({
+                    country: mongoose.Types.ObjectId(country._id),
+                    user: mongoose.Types.ObjectId(req.decoded.id),
+                    base64: photo.base64,
+                    title: photo.title,
+                    description: photo.description
+                });
+                photoToAdd.save(function(err, addedPhoto){
+                })
+            })
+            {
+                res.json({
+                    success: true,
+                    message: "Photos added"
+                })
+            }
+        })
+    }
+    else
+    {
+        res.json({
+            error: req.body.alpha3
+        })
+    }
+})
+
+
+router.get('/photos_thisUser/:alpha3', function(req, res, next){
+        Country.findOne({ alpha3: req.params.alpha3 })
+        .then(country => {
+            Photo.find({ user: req.decoded.id, country: country._id }, {_id: 0, country: 0})
+            .then(photos => {
+                res.json(photos)
+            })
+            .catch(err => {
+                res.status(400).send({
+                    success: false,
+                    message: "Error: " + err
+                })
             })
         })
         .catch(err => {
@@ -23,20 +57,6 @@ router.get('/getPhotos', function(req, res, next){
                 message: "Error: " + err
             })
         })
-})
-
-router.get('/testalacon', function(req, res, next){
-    User.findOne(
-        {
-            "name": "CHARLAT",
-            "countries": "5d341a9df565e4330ccbfb37"
-        }
-    )
-    .then(user => {
-        res.json({
-            user: user.countries
-        })
-    })
 })
 
 module.exports = router

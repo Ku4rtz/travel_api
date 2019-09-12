@@ -29,17 +29,7 @@ const UserSchema = new mongoose.Schema({
     countries: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Country',
-            photos: [
-                {
-                    base64: {
-                        type: String,
-                        required: true       
-                    },
-                    title: String,
-                    description: String
-                }
-            ]
+            ref: 'Country'
         }
     ],
     admin: {

@@ -1,16 +1,13 @@
 const express = require('express');
 const app = express();
 let helmet = require('helmet');
-let bodyParser = require('body-parser');
 let cors = require('cors');
 let cookieParser = require('cookie-parser');
 let config = require('./models/Config');
 let mongoose = require('mongoose');
- 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 
 mongoose.connect('mongodb+srv://CHARLAT:184628Stebest@cluster0-rbzrl.mongodb.net/travel_memories?retryWrites=true&w=majority')
     .then(() => console.log('Now connected to MongoDB!'))
@@ -56,7 +53,6 @@ app.use('/', auth);
 app.use('/', user);
 app.use('/', checktoken);
 app.use('/', test);
-app.use('/', photos);
 
 app.use('/', middlewareUser) // Middleware for users
 
@@ -64,6 +60,7 @@ app.use('/', middlewareUser) // Middleware for users
 app.use('/', countryUser);
 app.use('/', userUser);
 app.use('/', disconnect);
+app.use('/', photos);
 
 app.use('/', middlewareAdmin); // Middleware for admins
 
